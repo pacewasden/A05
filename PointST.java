@@ -2,6 +2,8 @@ package A05_KDTree;
 
 import edu.princeton.cs.algs4.Point2D;
 import edu.princeton.cs.algs4.RectHV;
+import edu.princeton.cs.algs4.RedBlackBST;
+import edu.princeton.cs.algs4.Stack;
 
 /**
  * 
@@ -11,12 +13,14 @@ import edu.princeton.cs.algs4.RectHV;
  */
 public class PointST<Value>
 {
+	private RedBlackBST<Point2D, Value> bst;
+
 	/**
 	 * Constructs an empty symbol table of points.
 	 */
 	public PointST()
 	{
-
+		bst = new RedBlackBST<>();
 	}
 
 	/**
@@ -26,7 +30,7 @@ public class PointST<Value>
 	 */
 	public boolean isEmpty()
 	{
-		return false; // TODO
+		return size() == 0;
 	}
 
 	/**
@@ -36,7 +40,7 @@ public class PointST<Value>
 	 */
 	public int size()
 	{
-		return 0; // TODO
+		return bst.size();
 
 	}
 
@@ -48,7 +52,11 @@ public class PointST<Value>
 	 */
 	public void put(Point2D p, Value val)
 	{
-
+		if (p == null)
+		{
+			throw new NullPointerException("The point passed may not be null");
+		}
+		bst.put(p, val);
 	}
 
 	/**
@@ -59,7 +67,11 @@ public class PointST<Value>
 	 */
 	public Value get(Point2D p)
 	{
-		return null; // TODO
+		if (p == null)
+		{
+			throw new NullPointerException("The point passed may not be null");
+		}
+		return bst.get(p);
 
 	}
 
@@ -71,7 +83,11 @@ public class PointST<Value>
 	 */
 	public boolean contains(Point2D p)
 	{
-		return false; // TODO
+		if (p == null)
+		{
+			throw new NullPointerException("The point passed may not be null");
+		}
+		return bst.contains(p);
 
 	}
 
@@ -82,7 +98,7 @@ public class PointST<Value>
 	 */
 	public Iterable<Point2D> points()
 	{
-		return null; // TODO
+		return bst.keys();
 
 	}
 
@@ -94,8 +110,21 @@ public class PointST<Value>
 	 */
 	public Iterable<Point2D> range(RectHV rect)
 	{
-		return null; // TODO
+		if (rect == null)
+		{
+			throw new NullPointerException("the rectangle passed may not be null");
+		}
 
+		// Creates a stack to hold all of the points within the rectangle.
+		Stack<Point2D> points = new Stack<>();
+		for (Point2D el : bst.keys())
+		{
+			if (rect.contains(el))
+			{
+				points.push(el);
+			}
+		}
+		return points;
 	}
 
 	/**
@@ -107,8 +136,22 @@ public class PointST<Value>
 	 */
 	public Point2D nearest(Point2D p)
 	{
-		return null; // TODO
+		if (p == null)
+		{
+			throw new NullPointerException("The point passed may not be null");
+		}
 
+		// Starts with the smallest point and compares p against each point
+		// until the nearest point is reached.
+		Point2D nextPoint = bst.min();
+		for (Point2D el : bst.keys())
+		{
+			if (p.distanceSquaredTo(el) < p.distanceSquaredTo(nextPoint))
+			{
+				nextPoint = el;
+			}
+		}
+		return nextPoint;
 	}
 
 	/**
@@ -118,6 +161,6 @@ public class PointST<Value>
 	 */
 	public static void main(String[] args)
 	{
-
+		// TODO or JUnit test cases
 	}
 }
